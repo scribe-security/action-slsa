@@ -1,0 +1,162 @@
+name: Scribe evidence generator
+description: Collect, Create and Store evidence for artifacts (SBOMs,SLSA prvennace) or any third-party tools.
+author: Mikey Strauss
+inputs:
+  target:
+    description: Target object name format=[<image:tag>, <dir path>, <git url>]
+    required: true
+  type:
+    description: Target source type scheme=[docker,docker-archive, oci-archive, dir, registry, git, generic]
+    deprecationMessage: Please use target fields, formated [type]:[target]:[tag]
+    required: false
+  scribe-audience:
+    description: Scribe auth audience
+    deprecationMessage: Please use scribe-auth-audience instead
+    required: false
+  all-env:
+    description: Attach all environment variables
+  build-type:
+    description: Set build type
+  builder-id:
+    description: Set builder id
+  components:
+    description: Select sbom components groups, options=[metadata layers packages syft files dep commits]
+  external:
+    description: Add build external parameters
+  finished-on:
+    description: Set metadata finished time (<YYYY>-<MM>-<DD>T<hh>:<mm>:<ss>Z)
+  force:
+    description: Force overwrite cache
+  format:
+    description: Evidence format, options=[statement attest predicate]
+  invocation:
+    description: Set metadata invocation ID
+  predicate:
+    description: Import predicate path
+  started-on:
+    description: Set metadata started time (<YYYY>-<MM>-<DD>T<hh>:<mm>:<ss>Z)
+  statement:
+    description: Import statement path
+  app-name:
+    description: Logical application name
+  app-version:
+    description: Logical application version
+  attest-config:
+    description: Attestation config path
+  attest-default:
+    description: Attestation default config, options=[sigstore sigstore-github x509 x509-env]
+  backoff:
+    description: Backoff duration
+  cache-enable:
+    description: Enable local cache
+  config:
+    description: Configuration file path
+  context-dir:
+    description: Context dir
+  env:
+    description: Environment keys to include in sbom
+  filter-regex:
+    description: Filter out files by regex
+  filter-scope:
+    description: Filter packages by scope
+  git-branch:
+    description: Git branch in the repository
+  git-commit:
+    description: Git commit hash in the repository
+  git-tag:
+    description: Git tag in the repository
+  label:
+    description: Add Custom labels
+  level:
+    description: Log depth level, options=[panic fatal error warning info debug trace]
+  oci:
+    description: Enable OCI store
+  oci-repo:
+    description: Select OCI custom attestation repo
+  output-directory:
+    description: Output directory path
+    default: ./scribe/valint
+  output-file:
+    description: Output file name
+  pipeline-name:
+    description: Pipeline name
+  predicate-type:
+    description: Custom Predicate type (generic evidence format)
+  product-key:
+    description: Product Key
+  product-version:
+    description: Product Version
+  scribe-auth-audience:
+    description: Scribe auth audience
+  scribe-client-id:
+    description: Scribe Client ID
+  scribe-client-secret:
+    description: Scribe Client Secret
+  scribe-enable:
+    description: Enable scribe client
+  scribe-login-url:
+    description: Scribe login url
+  scribe-url:
+    description: Scribe API Url
+  structured:
+    description: Enable structured logger
+  timeout:
+    description: Timeout duration
+  verbose:
+    description: Log verbosity level [-v,--verbose=1] = info, [-vv,--verbose=2] = debug
+runs:
+  using: docker
+  image: docker://scribesecuriy.jfrog.io/scribe-docker-public-local/valint:dev-latest
+  args:
+    - slsa
+    - ${{ inputs.type }}${{ inputs.type && ':' }}${{ inputs.target }}
+    - ${{ inputs.scribe-audience && '--scribe.auth.audience=' }}${{ inputs.scribe-audience }}
+    - ${{ inputs.all-env && '--all-env=' }}${{ inputs.all-env }}
+    - ${{ inputs.build-type && '--build-type=' }}${{ inputs.build-type }}
+    - ${{ inputs.builder-id && '--builder-id=' }}${{ inputs.builder-id }}
+    - ${{ inputs.components && '--components=' }}${{ inputs.components }}
+    - ${{ inputs.external && '--external=' }}${{ inputs.external }}
+    - ${{ inputs.finished-on && '--finished-on=' }}${{ inputs.finished-on }}
+    - ${{ inputs.force && '--force=' }}${{ inputs.force }}
+    - ${{ inputs.format && '--format=' }}${{ inputs.format }}
+    - ${{ inputs.invocation && '--invocation=' }}${{ inputs.invocation }}
+    - ${{ inputs.predicate && '--predicate=' }}${{ inputs.predicate }}
+    - ${{ inputs.started-on && '--started-on=' }}${{ inputs.started-on }}
+    - ${{ inputs.statement && '--statement=' }}${{ inputs.statement }}
+    - ${{ inputs.app-name && '--app-name=' }}${{ inputs.app-name }}
+    - ${{ inputs.app-version && '--app-version=' }}${{ inputs.app-version }}
+    - ${{ inputs.attest-config && '--attest.config=' }}${{ inputs.attest-config }}
+    - ${{ inputs.attest-default && '--attest.default=' }}${{ inputs.attest-default }}
+    - ${{ inputs.backoff && '--backoff=' }}${{ inputs.backoff }}
+    - ${{ inputs.cache-enable && '--cache-enable=' }}${{ inputs.cache-enable }}
+    - ${{ inputs.config && '--config=' }}${{ inputs.config }}
+    - ${{ inputs.context-dir && '--context-dir=' }}${{ inputs.context-dir }}
+    - --context-type=github
+    - ${{ inputs.env && '--env=' }}${{ inputs.env }}
+    - ${{ inputs.filter-regex && '--filter-regex=' }}${{ inputs.filter-regex }}
+    - ${{ inputs.filter-scope && '--filter-scope=' }}${{ inputs.filter-scope }}
+    - ${{ inputs.git-branch && '--git-branch=' }}${{ inputs.git-branch }}
+    - ${{ inputs.git-commit && '--git-commit=' }}${{ inputs.git-commit }}
+    - ${{ inputs.git-tag && '--git-tag=' }}${{ inputs.git-tag }}
+    - ${{ inputs.label && '--label=' }}${{ inputs.label }}
+    - ${{ inputs.level && '--level=' }}${{ inputs.level }}
+    - ${{ inputs.oci && '--oci=' }}${{ inputs.oci }}
+    - ${{ inputs.oci-repo && '--oci-repo=' }}${{ inputs.oci-repo }}
+    - ${{ inputs.output-directory && '--output-directory=' }}${{ inputs.output-directory }}
+    - ${{ inputs.output-file && '--output-file=' }}${{ inputs.output-file }}
+    - ${{ inputs.pipeline-name && '--pipeline-name=' }}${{ inputs.pipeline-name }}
+    - ${{ inputs.predicate-type && '--predicate-type=' }}${{ inputs.predicate-type }}
+    - ${{ inputs.product-key && '--product-key=' }}${{ inputs.product-key }}
+    - ${{ inputs.product-version && '--product-version=' }}${{ inputs.product-version }}
+    - ${{ inputs.scribe-auth-audience && '--scribe.auth.audience=' }}${{ inputs.scribe-auth-audience }}
+    - ${{ inputs.scribe-client-id && '--scribe.client-id=' }}${{ inputs.scribe-client-id }}
+    - ${{ inputs.scribe-client-secret && '--scribe.client-secret=' }}${{ inputs.scribe-client-secret }}
+    - ${{ inputs.scribe-enable && '--scribe.enable=' }}${{ inputs.scribe-enable }}
+    - ${{ inputs.scribe-login-url && '--scribe.login-url=' }}${{ inputs.scribe-login-url }}
+    - ${{ inputs.scribe-url && '--scribe.url=' }}${{ inputs.scribe-url }}
+    - ${{ inputs.structured && '--structured=' }}${{ inputs.structured }}
+    - ${{ inputs.timeout && '--timeout=' }}${{ inputs.timeout }}
+    - ${{ inputs.verbose && '--verbose=' }}${{ inputs.verbose }}
+branding:
+  icon: shield
+  color: green
