@@ -1,6 +1,6 @@
-name: Scribe evidence generator
-description: Collect, Create and Store evidence for artifacts (SBOMs,SLSA prvennace) or any third-party tools.
-author: Mikey Strauss
+name: valint_slsa
+description: Collect, Create and Store SLSA provenance evidence
+author: ""
 inputs:
   target:
     description: Target object name format=[<image:tag>, <dir path>, <git url>]
@@ -20,11 +20,11 @@ inputs:
   builder-id:
     description: Set builder id
   components:
-    description: Select sbom components groups, options=[metadata layers packages syft files dep commits]
+    description: Select by products components groups, options=[metadata layers packages syft files dep commits]
   external:
     description: Add build external parameters
   finished-on:
-    description: Set metadata finished time (<YYYY>-<MM>-<DD>T<hh>:<mm>:<ss>Z)
+    description: Set metadata finished time (YYYY-MM-DDThh:mm:ssZ)
   force:
     description: Force overwrite cache
   format:
@@ -34,7 +34,7 @@ inputs:
   predicate:
     description: Import predicate path
   started-on:
-    description: Set metadata started time (<YYYY>-<MM>-<DD>T<hh>:<mm>:<ss>Z)
+    description: Set metadata started time (YYYY-MM-DDThh:mm:ssZ)
   statement:
     description: Import statement path
   app-name:
@@ -47,8 +47,12 @@ inputs:
     description: Attestation default config, options=[sigstore sigstore-github x509 x509-env]
   backoff:
     description: Backoff duration
+  ca:
+    description: x509 CA Chain path
   cache-enable:
     description: Enable local cache
+  cert:
+    description: x509 Cert path
   config:
     description: Configuration file path
   context-dir:
@@ -65,6 +69,8 @@ inputs:
     description: Git commit hash in the repository
   git-tag:
     description: Git tag in the repository
+  key:
+    description: x509 Private key path
   label:
     description: Add Custom labels
   level:
@@ -128,7 +134,9 @@ runs:
     - ${{ inputs.attest-config && '--attest.config=' }}${{ inputs.attest-config }}
     - ${{ inputs.attest-default && '--attest.default=' }}${{ inputs.attest-default }}
     - ${{ inputs.backoff && '--backoff=' }}${{ inputs.backoff }}
+    - ${{ inputs.ca && '--ca=' }}${{ inputs.ca }}
     - ${{ inputs.cache-enable && '--cache-enable=' }}${{ inputs.cache-enable }}
+    - ${{ inputs.cert && '--cert=' }}${{ inputs.cert }}
     - ${{ inputs.config && '--config=' }}${{ inputs.config }}
     - ${{ inputs.context-dir && '--context-dir=' }}${{ inputs.context-dir }}
     - --context-type=github
@@ -138,6 +146,7 @@ runs:
     - ${{ inputs.git-branch && '--git-branch=' }}${{ inputs.git-branch }}
     - ${{ inputs.git-commit && '--git-commit=' }}${{ inputs.git-commit }}
     - ${{ inputs.git-tag && '--git-tag=' }}${{ inputs.git-tag }}
+    - ${{ inputs.key && '--key=' }}${{ inputs.key }}
     - ${{ inputs.label && '--label=' }}${{ inputs.label }}
     - ${{ inputs.level && '--level=' }}${{ inputs.level }}
     - ${{ inputs.oci && '--oci=' }}${{ inputs.oci }}
