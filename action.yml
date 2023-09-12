@@ -19,6 +19,8 @@ inputs:
     description: Set build type
   builder-id:
     description: Set builder id
+  by-product:
+    description: Attach by product path
   components:
     description: Select by products components groups, options=[metadata layers packages syft files dep commits]
   external:
@@ -39,8 +41,10 @@ inputs:
     description: Import statement path
   app-name:
     description: Logical application name
+    deprecationMessage: Flag is no longer supported
   app-version:
     description: Logical application version
+    deprecationMessage: Flag is no longer supported
   attest-config:
     description: Attestation config path
   attest-default:
@@ -75,6 +79,10 @@ inputs:
     description: Add Custom labels
   level:
     description: Log depth level, options=[panic fatal error warning info debug trace]
+  log-context:
+    description: Attach context to all logs
+  log-file:
+    description: Output log to file
   oci:
     description: Enable OCI store
   oci-repo:
@@ -120,6 +128,7 @@ runs:
     - ${{ inputs.all-env && '--all-env=' }}${{ inputs.all-env }}
     - ${{ inputs.build-type && '--build-type=' }}${{ inputs.build-type }}
     - ${{ inputs.builder-id && '--builder-id=' }}${{ inputs.builder-id }}
+    - ${{ inputs.by-product && '--by-product=' }}${{ inputs.by-product }}
     - ${{ inputs.components && '--components=' }}${{ inputs.components }}
     - ${{ inputs.external && '--external=' }}${{ inputs.external }}
     - ${{ inputs.finished-on && '--finished-on=' }}${{ inputs.finished-on }}
@@ -129,8 +138,6 @@ runs:
     - ${{ inputs.predicate && '--predicate=' }}${{ inputs.predicate }}
     - ${{ inputs.started-on && '--started-on=' }}${{ inputs.started-on }}
     - ${{ inputs.statement && '--statement=' }}${{ inputs.statement }}
-    - ${{ inputs.app-name && '--app-name=' }}${{ inputs.app-name }}
-    - ${{ inputs.app-version && '--app-version=' }}${{ inputs.app-version }}
     - ${{ inputs.attest-config && '--attest.config=' }}${{ inputs.attest-config }}
     - ${{ inputs.attest-default && '--attest.default=' }}${{ inputs.attest-default }}
     - ${{ inputs.backoff && '--backoff=' }}${{ inputs.backoff }}
@@ -149,6 +156,8 @@ runs:
     - ${{ inputs.key && '--key=' }}${{ inputs.key }}
     - ${{ inputs.label && '--label=' }}${{ inputs.label }}
     - ${{ inputs.level && '--level=' }}${{ inputs.level }}
+    - ${{ inputs.log-context && '--log-context=' }}${{ inputs.log-context }}
+    - ${{ inputs.log-file && '--log-file=' }}${{ inputs.log-file }}
     - ${{ inputs.oci && '--oci=' }}${{ inputs.oci }}
     - ${{ inputs.oci-repo && '--oci-repo=' }}${{ inputs.oci-repo }}
     - ${{ inputs.output-directory && '--output-directory=' }}${{ inputs.output-directory }}
