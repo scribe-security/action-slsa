@@ -1,4 +1,4 @@
-name: valint_slsa
+name: Scribe SLSA provenance Generator
 description: Collect, Create and Store SLSA provenance evidence
 author: ""
 inputs:
