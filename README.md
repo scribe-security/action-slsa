@@ -4,6 +4,8 @@ title: Scribe GitHub Action for `valint slsa`
 sidebar_position: 1
 ---
 
+# SLSA Provenance Action
+
 `valint slsa` is used to generate SLSA Provenance type evidence. The Provenance generation includes options to collect and embedd different data items into the Provenance document. 
 
 Further documentation [GitHub integration](../github/)
