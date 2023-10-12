@@ -39,12 +39,8 @@ inputs:
     description: Set metadata started time (YYYY-MM-DDThh:mm:ssZ)
   statement:
     description: Import statement path
-  app-name:
-    description: Logical application name
-    deprecationMessage: Flag is no longer supported
-  app-version:
-    description: Logical application version
-    deprecationMessage: Flag is no longer supported
+  allow-expired:
+    description: Allow expired certs
   attest-config:
     description: Attestation config path
   attest-default:
@@ -61,6 +57,12 @@ inputs:
     description: Configuration file path
   context-dir:
     description: Context dir
+  crl:
+    description: x509 CRL path
+  crl-full-chain:
+    description: Enable Full chain CRL verfication
+  enable-crl:
+    description: Verify certificate revocation list
   env:
     description: Environment keys to include in sbom
   filter-regex:
@@ -94,6 +96,8 @@ inputs:
     description: Output file name
   pipeline-name:
     description: Pipeline name
+  policy-args:
+    description: Policy arguments
   predicate-type:
     description: Custom Predicate type (generic evidence format)
   product-key:
@@ -138,6 +142,7 @@ runs:
     - ${{ inputs.predicate && '--predicate=' }}${{ inputs.predicate }}
     - ${{ inputs.started-on && '--started-on=' }}${{ inputs.started-on }}
     - ${{ inputs.statement && '--statement=' }}${{ inputs.statement }}
+    - ${{ inputs.allow-expired && '--allow-expired=' }}${{ inputs.allow-expired }}
     - ${{ inputs.attest-config && '--attest.config=' }}${{ inputs.attest-config }}
     - ${{ inputs.attest-default && '--attest.default=' }}${{ inputs.attest-default }}
     - ${{ inputs.backoff && '--backoff=' }}${{ inputs.backoff }}
@@ -147,6 +152,9 @@ runs:
     - ${{ inputs.config && '--config=' }}${{ inputs.config }}
     - ${{ inputs.context-dir && '--context-dir=' }}${{ inputs.context-dir }}
     - --context-type=github
+    - ${{ inputs.crl && '--crl=' }}${{ inputs.crl }}
+    - ${{ inputs.crl-full-chain && '--crl-full-chain=' }}${{ inputs.crl-full-chain }}
+    - ${{ inputs.enable-crl && '--enable-crl=' }}${{ inputs.enable-crl }}
     - ${{ inputs.env && '--env=' }}${{ inputs.env }}
     - ${{ inputs.filter-regex && '--filter-regex=' }}${{ inputs.filter-regex }}
     - ${{ inputs.filter-scope && '--filter-scope=' }}${{ inputs.filter-scope }}
@@ -163,6 +171,7 @@ runs:
     - ${{ inputs.output-directory && '--output-directory=' }}${{ inputs.output-directory }}
     - ${{ inputs.output-file && '--output-file=' }}${{ inputs.output-file }}
     - ${{ inputs.pipeline-name && '--pipeline-name=' }}${{ inputs.pipeline-name }}
+    - ${{ inputs.policy-args && '--policy-args=' }}${{ inputs.policy-args }}
     - ${{ inputs.predicate-type && '--predicate-type=' }}${{ inputs.predicate-type }}
     - ${{ inputs.product-key && '--product-key=' }}${{ inputs.product-key }}
     - ${{ inputs.product-version && '--product-version=' }}${{ inputs.product-version }}
