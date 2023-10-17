@@ -39,6 +39,12 @@ inputs:
     description: Set metadata started time (YYYY-MM-DDThh:mm:ssZ)
   statement:
     description: Import statement path
+  app-name:
+    description: Logical application name
+    deprecationMessage: Flag is no longer supported
+  app-version:
+    description: Logical application version
+    deprecationMessage: Flag is no longer supported
   allow-expired:
     description: Allow expired certs
   attest-config:
@@ -124,7 +130,7 @@ inputs:
     description: Log verbosity level [-v,--verbose=1] = info, [-vv,--verbose=2] = debug
 runs:
   using: docker
-  image: docker://scribesecuriy.jfrog.io/scribe-docker-public-local/valint:dev-latest
+  image: docker://scribesecuriy.jfrog.io/scribe-docker-public-local/valint:v0.4.1
   args:
     - slsa
     - ${{ inputs.type }}${{ inputs.type && ':' }}${{ inputs.target }}
