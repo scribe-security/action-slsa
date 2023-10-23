@@ -61,8 +61,8 @@ inputs:
     description: x509 CRL path
   crl-full-chain:
     description: Enable Full chain CRL verfication
-  enable-crl:
-    description: Verify certificate revocation list
+  disable-crl:
+    description: Disable certificate revocation verificatoin
   env:
     description: Environment keys to include in sbom
   filter-regex:
@@ -154,7 +154,7 @@ runs:
     - --context-type=github
     - ${{ inputs.crl && '--crl=' }}${{ inputs.crl }}
     - ${{ inputs.crl-full-chain && '--crl-full-chain=' }}${{ inputs.crl-full-chain }}
-    - ${{ inputs.enable-crl && '--enable-crl=' }}${{ inputs.enable-crl }}
+    - ${{ inputs.disable-crl && '--disable-crl=' }}${{ inputs.disable-crl }}
     - ${{ inputs.env && '--env=' }}${{ inputs.env }}
     - ${{ inputs.filter-regex && '--filter-regex=' }}${{ inputs.filter-regex }}
     - ${{ inputs.filter-scope && '--filter-scope=' }}${{ inputs.filter-scope }}
