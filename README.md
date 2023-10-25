@@ -20,14 +20,14 @@ This action allows users to generate and manage evidence collection process.
   - Custom invocation, external params and other fields.
 - Signing - Generate In-Toto Attestation.
 - Support Sigstore keyless verifying as well as [Github workload identity](https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect).
-- Attach GitHub workflows [environment](https://docs.github.com/en/actions/learn-github-actions/environment-variables) context (git url , commit, workflow, job, run id ..).
+- Attach GitHub workflows [environment](https://docs.github.com/en/actions/learn-environment-variables) context (git url , commit, workflow, job, run id ..).
 
 > Containerized actions limit's the ability to generate evidence on a target located outside the working directory (directory or git targets). <br />
 To overcome the limitation install tool directly - [installer](https://github.com/scribe-security/actions/tree/master/installer)
 
 ### Input arguments
 ```yaml
-   target:
+  target:
     description: Target object name format=[<image:tag>, <dir path>, <git url>]
     required: true
   type:
@@ -38,30 +38,56 @@ To overcome the limitation install tool directly - [installer](https://github.co
     description: Scribe auth audience
     deprecationMessage: Please use scribe-auth-audience instead
     required: false
-  attestation:
-    description: Attestation for target
-  common-name:
-    description: Default policy allowed common names
-  email:
-    description: Default policy allowed emails
+  all-env:
+    description: Attach all environment variables
+  build-type:
+    description: Set build type
+  builder-id:
+    description: Set builder id
+  by-product:
+    description: Attach by product path
+  components:
+    description: Select by products components groups, options=[metadata layers packages syft files dep commits]
+  external:
+    description: Add build external parameters
+  finished-on:
+    description: Set metadata finished time (YYYY-MM-DDThh:mm:ssZ)
   force:
-    description: Force skip cache
-  input-format:
-    description: Evidence format, options=[attest-cyclonedx-json attest-slsa statement-slsa statement-cyclonedx-json statement-generic attest-generic]
-  uri:
-    description: Default policy allowed uris
+    description: Force overwrite cache
+  format:
+    description: Evidence format, options=[statement attest predicate]
+  invocation:
+    description: Set metadata invocation ID
+  predicate:
+    description: Import predicate path
+  started-on:
+    description: Set metadata started time (YYYY-MM-DDThh:mm:ssZ)
+  statement:
+    description: Import statement path
+  allow-expired:
+    description: Allow expired certs
   attest-config:
     description: Attestation config path
   attest-default:
     description: Attestation default config, options=[sigstore sigstore-github x509 x509-env]
   backoff:
     description: Backoff duration
+  ca:
+    description: x509 CA Chain path
   cache-enable:
     description: Enable local cache
+  cert:
+    description: x509 Cert path
   config:
     description: Configuration file path
   context-dir:
     description: Context dir
+  crl:
+    description: x509 CRL path
+  crl-full-chain:
+    description: Enable Full chain CRL verfication
+  disable-crl:
+    description: Disable certificate revocation verificatoin
   env:
     description: Environment keys to include in sbom
   filter-regex:
@@ -74,10 +100,16 @@ To overcome the limitation install tool directly - [installer](https://github.co
     description: Git commit hash in the repository
   git-tag:
     description: Git tag in the repository
+  key:
+    description: x509 Private key path
   label:
     description: Add Custom labels
   level:
     description: Log depth level, options=[panic fatal error warning info debug trace]
+  log-context:
+    description: Attach context to all logs
+  log-file:
+    description: Output log to file
   oci:
     description: Enable OCI store
   oci-repo:
@@ -89,6 +121,8 @@ To overcome the limitation install tool directly - [installer](https://github.co
     description: Output file name
   pipeline-name:
     description: Pipeline name
+  policy-args:
+    description: Policy arguments
   predicate-type:
     description: Custom Predicate type (generic evidence format)
   product-key:
@@ -97,7 +131,6 @@ To overcome the limitation install tool directly - [installer](https://github.co
     description: Product Version
   scribe-auth-audience:
     description: Scribe auth audience
-    required: false
   scribe-client-id:
     description: Scribe Client ID
   scribe-client-secret:
@@ -125,10 +158,12 @@ To overcome the limitation install tool directly - [installer](https://github.co
 ### Usage
 ```yaml
 - name: Generate SLSA provenance
-  uses: scribe-security/action-slsa@master
+  uses: scribe-security/action-slsa@v0.4.2
   with:
     target: 'busybox:latest'
 ```
+
+> Use `master` instead of tag to automatically pull latest version.
 
 ### Configuration
 If you prefer using a custom configuration file instead of specifying arguments directly, you have two choices. You can either place the configuration file in the default path, which is `.valint.yaml`, or you can specify a custom path using the `config` argument.
@@ -170,6 +205,7 @@ For example the following configuration and Job.
 Configuration File, `.valint.yaml`
 ```yaml
 attest:
+  default: "" # Set custom configuration
   cocosign:
     signer:
         x509:
@@ -258,7 +294,7 @@ Related Flags:
 >* `scribe-enable`
 
 ### Before you begin
-Integrating Scribe Hub with your environment requires the following credentials that are found in the **Integrations** page. (In your **[Scribe Hub](https://prod.hub.scribesecurity.com/ "Scribe Hub Link")** go to **integrations**)
+Integrating Scribe Hub with your environment requires the following credentials that are found in the **Integrations** page. (In your **[Scribe Hub](https://scribehub.scribesecurity.com/ "Scribe Hub Link")** go to **integrations**)
 
 * **Client ID**
 * **Client Secret**
@@ -302,7 +338,7 @@ jobs:
 ```
 
 ### Alternative evidence stores
-> You can learn more about alternative stores **[here](../other-evidence-stores)**.
+> You can learn more about alternative stores **[here](https://scribe-security.netlify.app/docs/integrating-scribe/other-evidence-stores)**.
 
 <details>
   <summary> <b> OCI Evidence store </b></summary>
@@ -360,6 +396,21 @@ jobs:
           oci-repo: [oci_repo]
 ```
 </details>
+
+### Running action as non root user
+By default action runs in its own pid namespace as the root user.
+You change users you can use the `USERID` and `USERNAME` env
+
+```YAML
+- name: Generate cyclonedx json SBOM
+  uses: scribe-security/action-bom@master
+  with:
+    target: 'busybox:latest'
+    format: json
+  env:
+    USERID: 1001
+    USERNAME: runner
+``` 
 
 ### Basic examples
 <details>
@@ -913,7 +964,7 @@ Recommended to add output directory value to your .gitignore file.
 By default add `**/scribe` to your `.gitignore`.
 
 ## Other Actions
-* [bom](action-bom), [source](https://github.com/scribe-security/action-bom)
-* [slsa](action-slsa), [source](https://github.com/scribe-security/action-slsa)
-* [verify](action-verify), [source](https://github.com/scribe-security/action-verify)
-* [installer](action-installer), [source](https://github.com/scribe-security/action-installer)
+* [bom](action-bom.md), [source](https://github.com/scribe-security/action-bom)
+* [slsa](action-slsa.md), [source](https://github.com/scribe-security/action-slsa)
+* [verify](action-verify.md), [source](https://github.com/scribe-security/action-verify)
+* [installer](action-installer.md), [source](https://github.com/scribe-security/action-installer)
