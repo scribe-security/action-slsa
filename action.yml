@@ -67,8 +67,8 @@ inputs:
     description: x509 CRL path
   crl-full-chain:
     description: Enable Full chain CRL verfication
-  enable-crl:
-    description: Verify certificate revocation list
+  disable-crl:
+    description: Disable certificate revocation verificatoin
   env:
     description: Environment keys to include in sbom
   filter-regex:
@@ -130,7 +130,7 @@ inputs:
     description: Log verbosity level [-v,--verbose=1] = info, [-vv,--verbose=2] = debug
 runs:
   using: docker
-  image: docker://scribesecuriy.jfrog.io/scribe-docker-public-local/valint:v0.4.1
+  image: docker://scribesecuriy.jfrog.io/scribe-docker-public-local/valint:v0.4.2
   args:
     - slsa
     - ${{ inputs.type }}${{ inputs.type && ':' }}${{ inputs.target }}
@@ -160,7 +160,7 @@ runs:
     - --context-type=github
     - ${{ inputs.crl && '--crl=' }}${{ inputs.crl }}
     - ${{ inputs.crl-full-chain && '--crl-full-chain=' }}${{ inputs.crl-full-chain }}
-    - ${{ inputs.enable-crl && '--enable-crl=' }}${{ inputs.enable-crl }}
+    - ${{ inputs.disable-crl && '--disable-crl=' }}${{ inputs.disable-crl }}
     - ${{ inputs.env && '--env=' }}${{ inputs.env }}
     - ${{ inputs.filter-regex && '--filter-regex=' }}${{ inputs.filter-regex }}
     - ${{ inputs.filter-scope && '--filter-scope=' }}${{ inputs.filter-scope }}
