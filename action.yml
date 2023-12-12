@@ -1,4 +1,4 @@
-name: valint_slsa
+name: Scribe SLSA Provenance Generator
 description: Collect, Create and Store SLSA provenance evidence
 author: ""
 inputs:
@@ -39,6 +39,12 @@ inputs:
     description: Set metadata started time (YYYY-MM-DDThh:mm:ssZ)
   statement:
     description: Import statement path
+  app-name:
+    description: Logical application name
+    deprecationMessage: Flag is no longer supported
+  app-version:
+    description: Logical application version
+    deprecationMessage: Flag is no longer supported
   allow-expired:
     description: Allow expired certs
   attest-config:
