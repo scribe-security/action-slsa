@@ -63,6 +63,8 @@ inputs:
     description: Enable Full chain CRL verfication
   deliverable:
     description: Mark as deliverable, options=[true, false]
+  depth:
+    description: Git clone depth
   disable-crl:
     description: Disable certificate revocation verificatoin
   env:
@@ -98,6 +100,8 @@ inputs:
     description: Output file name
   pipeline-name:
     description: Pipeline name
+  platform:
+    description: Select target platform, examples=windows/armv6, arm64 ..)
   policy-args:
     description: Policy arguments
   predicate-type:
@@ -157,6 +161,7 @@ runs:
     - ${{ inputs.crl && '--crl=' }}${{ inputs.crl }}
     - ${{ inputs.crl-full-chain && '--crl-full-chain=' }}${{ inputs.crl-full-chain }}
     - ${{ inputs.deliverable && '--deliverable=' }}${{ inputs.deliverable }}
+    - ${{ inputs.depth && '--depth=' }}${{ inputs.depth }}
     - ${{ inputs.disable-crl && '--disable-crl=' }}${{ inputs.disable-crl }}
     - ${{ inputs.env && '--env=' }}${{ inputs.env }}
     - ${{ inputs.filter-regex && '--filter-regex=' }}${{ inputs.filter-regex }}
@@ -174,6 +179,7 @@ runs:
     - ${{ inputs.output-directory && '--output-directory=' }}${{ inputs.output-directory }}
     - ${{ inputs.output-file && '--output-file=' }}${{ inputs.output-file }}
     - ${{ inputs.pipeline-name && '--pipeline-name=' }}${{ inputs.pipeline-name }}
+    - ${{ inputs.platform && '--platform=' }}${{ inputs.platform }}
     - ${{ inputs.policy-args && '--policy-args=' }}${{ inputs.policy-args }}
     - ${{ inputs.predicate-type && '--predicate-type=' }}${{ inputs.predicate-type }}
     - ${{ inputs.product-key && '--product-key=' }}${{ inputs.product-key }}
