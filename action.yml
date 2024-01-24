@@ -1,6 +1,10 @@
-name: valint_slsa
+name: Scribe SLSA Provanence evidence generator
 description: Collect, Create and Store SLSA provenance evidence
-author: ""
+author: Mikey Strauss
+outputs:
+  OUTPUT_PATH:
+    description: evidence output file path
+    value: ""
 inputs:
   target:
     description: Target object name format=[<image:tag>, <dir path>, <git url>]
@@ -30,7 +34,7 @@ inputs:
   force:
     description: Force overwrite cache
   format:
-    description: Evidence format, options=[statement attest predicate]
+    description: Evidence format, options=[statement attest]
   invocation:
     description: Set metadata invocation ID
   predicate:
