@@ -9,4 +9,5 @@ git checkout -b prep_release/$version
 sed -i "s/dev-latest/$version/g" action.yml
 git add action.yml || true
 git commit -m "bump version" || true
+git merge --no-edit -s ours origin/master || true
 git push -f origin prep_release/$version || true
