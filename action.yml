@@ -1,6 +1,10 @@
-name: Scribe SLSA Provenance Generator
+name: Scribe SLSA Provanence evidence generator
 description: Collect, Create and Store SLSA provenance evidence
-author: ""
+author: Mikey Strauss
+outputs:
+  OUTPUT_PATH:
+    description: evidence output file path
+    value: ""
 inputs:
   target:
     description: Target object name format=[<image:tag>, <dir path>, <git url>]
@@ -30,7 +34,7 @@ inputs:
   force:
     description: Force overwrite cache
   format:
-    description: Evidence format, options=[statement attest predicate]
+    description: Evidence format, options=[statement attest]
   invocation:
     description: Set metadata invocation ID
   predicate:
@@ -39,12 +43,6 @@ inputs:
     description: Set metadata started time (YYYY-MM-DDThh:mm:ssZ)
   statement:
     description: Import statement path
-  app-name:
-    description: Logical application name
-    deprecationMessage: Flag is no longer supported
-  app-version:
-    description: Logical application version
-    deprecationMessage: Flag is no longer supported
   allow-expired:
     description: Allow expired certs
   attest-config:
@@ -74,7 +72,7 @@ inputs:
   disable-crl:
     description: Disable certificate revocation verificatoin
   env:
-    description: Environment keys to include in sbom
+    description: Environment keys to include in evidence
   filter-regex:
     description: Filter out files by regex
   filter-scope:
@@ -108,14 +106,14 @@ inputs:
     description: Pipeline name
   platform:
     description: Select target platform, examples=windows/armv6, arm64 ..)
-  policy-args:
-    description: Policy arguments
   predicate-type:
     description: Custom Predicate type (generic evidence format)
   product-key:
     description: Product Key
   product-version:
     description: Product Version
+  rule-args:
+    description: Policy arguments
   scribe-auth-audience:
     description: Scribe auth audience
   scribe-client-id:
@@ -136,7 +134,7 @@ inputs:
     description: Log verbosity level [-v,--verbose=1] = info, [-vv,--verbose=2] = debug
 runs:
   using: docker
-  image: docker://scribesecuriy.jfrog.io/scribe-docker-public-local/valint:v1.0.0
+  image: docker://scribesecuriy.jfrog.io/scribe-docker-public-local/valint:v1.1.0
   args:
     - slsa
     - ${{ inputs.type }}${{ inputs.type && ':' }}${{ inputs.target }}
@@ -186,10 +184,10 @@ runs:
     - ${{ inputs.output-file && '--output-file=' }}${{ inputs.output-file }}
     - ${{ inputs.pipeline-name && '--pipeline-name=' }}${{ inputs.pipeline-name }}
     - ${{ inputs.platform && '--platform=' }}${{ inputs.platform }}
-    - ${{ inputs.policy-args && '--policy-args=' }}${{ inputs.policy-args }}
     - ${{ inputs.predicate-type && '--predicate-type=' }}${{ inputs.predicate-type }}
     - ${{ inputs.product-key && '--product-key=' }}${{ inputs.product-key }}
     - ${{ inputs.product-version && '--product-version=' }}${{ inputs.product-version }}
+    - ${{ inputs.rule-args && '--rule-args=' }}${{ inputs.rule-args }}
     - ${{ inputs.scribe-auth-audience && '--scribe.auth.audience=' }}${{ inputs.scribe-auth-audience }}
     - ${{ inputs.scribe-client-id && '--scribe.client-id=' }}${{ inputs.scribe-client-id }}
     - ${{ inputs.scribe-client-secret && '--scribe.client-secret=' }}${{ inputs.scribe-client-secret }}

@@ -47,7 +47,7 @@ To overcome the limitation install tool directly - [installer](https://github.co
   force:
     description: Force overwrite cache
   format:
-    description: Evidence format, options=[statement attest predicate]
+    description: Evidence format, options=[statement attest]
   invocation:
     description: Set metadata invocation ID
   predicate:
@@ -80,10 +80,12 @@ To overcome the limitation install tool directly - [installer](https://github.co
     description: Enable Full chain CRL verfication
   deliverable:
     description: Mark as deliverable, options=[true, false]
+  depth:
+    description: Git clone depth
   disable-crl:
     description: Disable certificate revocation verificatoin
   env:
-    description: Environment keys to include in sbom
+    description: Environment keys to include in evidence
   filter-regex:
     description: Filter out files by regex
   filter-scope:
@@ -115,14 +117,16 @@ To overcome the limitation install tool directly - [installer](https://github.co
     description: Output file name
   pipeline-name:
     description: Pipeline name
-  policy-args:
-    description: Policy arguments
+  platform:
+    description: Select target platform, examples=windows/armv6, arm64 ..)
   predicate-type:
     description: Custom Predicate type (generic evidence format)
   product-key:
     description: Product Key
   product-version:
     description: Product Version
+  rule-args:
+    description: Policy arguments
   scribe-auth-audience:
     description: Scribe auth audience
   scribe-client-id:
@@ -131,6 +135,8 @@ To overcome the limitation install tool directly - [installer](https://github.co
     description: Scribe Client Secret
   scribe-enable:
     description: Enable scribe client
+  scribe-login-url:
+    description: Scribe login url
   scribe-url:
     description: Scribe API Url
   structured:
@@ -151,7 +157,7 @@ To overcome the limitation install tool directly - [installer](https://github.co
 Containerized action can be used on Linux runners as following
 ```yaml
 - name: Generate SLSA provenance
-  uses: scribe-security/action-slsa@v1.0.0
+  uses: scribe-security/action-slsa@v1.1.0
   with:
     target: 'busybox:latest'
 ```
@@ -159,7 +165,7 @@ Containerized action can be used on Linux runners as following
 Composite Action can be used on Linux or Windows runners as following
 ```yaml
 - name: Generate cyclonedx json SBOM
-  uses: scribe-security/action-slsa-cli@v1.0.0
+  uses: scribe-security/action-slsa-cli@v1.1.0
   with:
     target: 'hello-world:latest'
 ```
@@ -321,18 +327,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-        uses: scribe-security/action-slsa@master
+      - uses: scribe-security/action-slsa@master
         with:
           target: [target]
-          format: [statement attest predicate] (default [statement])
+          format: [statement, attest]
           scribe-enable: true
           scribe-client-id: ${{ secrets.clientid }}
           scribe-client-secret: ${{ secrets.clientsecret }}
 
-        uses: scribe-security/action-verify@master
+      - uses: scribe-security/action-verify@master
         with:
           target: [target]
-          input-format: [statement attest predicate] (default [statement])
+          input-format: [statement-slsa, attest-slsa]
           scribe-enable: true
           scribe-client-id: ${{ secrets.clientid }}
           scribe-client-secret: ${{ secrets.clientsecret }}
@@ -986,5 +992,6 @@ By default add `**/scribe` to your `.gitignore`.
 ## Other Actions
 * [bom](action-bom.md), [source](https://github.com/scribe-security/action-bom)
 * [slsa](action-slsa.md), [source](https://github.com/scribe-security/action-slsa)
+* [evidence](action-evidence.md), [source](https://github.com/scribe-security/action-evidence)
 * [verify](action-verify.md), [source](https://github.com/scribe-security/action-verify)
 * [installer](action-installer.md), [source](https://github.com/scribe-security/action-installer)
