@@ -77,6 +77,10 @@ inputs:
     description: Filter out files by regex
   filter-scope:
     description: Filter packages by scope
+  gate:
+    description: Policy Gate name
+  git-auth:
+    description: 'Git repository authentication info, [format: ''username:password'']'
   git-branch:
     description: Git branch in the repository
   git-commit:
@@ -134,7 +138,7 @@ inputs:
     description: Log verbosity level [-v,--verbose=1] = info, [-vv,--verbose=2] = debug
 runs:
   using: docker
-  image: docker://scribesecuriy.jfrog.io/scribe-docker-public-local/valint:v1.1.1
+  image: docker://scribesecuriy.jfrog.io/scribe-docker-public-local/valint:v1.2.0
   args:
     - slsa
     - ${{ inputs.type }}${{ inputs.type && ':' }}${{ inputs.target }}
@@ -170,6 +174,8 @@ runs:
     - ${{ inputs.env && '--env=' }}${{ inputs.env }}
     - ${{ inputs.filter-regex && '--filter-regex=' }}${{ inputs.filter-regex }}
     - ${{ inputs.filter-scope && '--filter-scope=' }}${{ inputs.filter-scope }}
+    - ${{ inputs.gate && '--gate=' }}${{ inputs.gate }}
+    - ${{ inputs.git-auth && '--git-auth=' }}${{ inputs.git-auth }}
     - ${{ inputs.git-branch && '--git-branch=' }}${{ inputs.git-branch }}
     - ${{ inputs.git-commit && '--git-commit=' }}${{ inputs.git-commit }}
     - ${{ inputs.git-tag && '--git-tag=' }}${{ inputs.git-tag }}
