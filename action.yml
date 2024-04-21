@@ -119,7 +119,7 @@ inputs:
   rule-args:
     description: Policy arguments
   scribe-auth-audience:
-    description: Scribe auth audience
+    description: Scribe auth audience (deprecated)
   scribe-client-id:
     description: Scribe Client ID
   scribe-client-secret:
@@ -127,7 +127,7 @@ inputs:
   scribe-enable:
     description: Enable scribe client
   scribe-login-url:
-    description: Scribe login url
+    description: Scribe login url (deprecated)
   scribe-url:
     description: Scribe API Url
   structured:
