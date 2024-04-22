@@ -119,7 +119,7 @@ inputs:
   rule-args:
     description: Policy arguments
   scribe-auth-audience:
-    description: Scribe auth audience
+    description: Scribe auth audience (deprecated)
   scribe-client-id:
     description: Scribe Client ID
   scribe-client-secret:
@@ -127,7 +127,7 @@ inputs:
   scribe-enable:
     description: Enable scribe client
   scribe-login-url:
-    description: Scribe login url
+    description: Scribe login url (deprecated)
   scribe-url:
     description: Scribe API Url
   structured:
@@ -138,7 +138,7 @@ inputs:
     description: Log verbosity level [-v,--verbose=1] = info, [-vv,--verbose=2] = debug
 runs:
   using: docker
-  image: docker://scribesecuriy.jfrog.io/scribe-docker-public-local/valint:v1.2.0
+  image: docker://scribesecuriy.jfrog.io/scribe-docker-public-local/valint:v1.4.0
   args:
     - slsa
     - ${{ inputs.type }}${{ inputs.type && ':' }}${{ inputs.target }}
