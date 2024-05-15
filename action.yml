@@ -121,9 +121,9 @@ inputs:
   scribe-auth-audience:
     description: Scribe auth audience (deprecated)
   scribe-client-id:
-    description: Scribe Client ID
+    description: Scribe Client ID (deprecated)
   scribe-client-secret:
-    description: Scribe Client Secret
+    description: Scribe Client Token
   scribe-enable:
     description: Enable scribe client
   scribe-login-url:
