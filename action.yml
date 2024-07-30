@@ -121,7 +121,7 @@ runs:
   image: docker://scribesecuriy.jfrog.io/scribe-docker-public-local/valint:dev-latest
   args:
     - slsa
-    - ${{ inputs.target}}
+    - ${{ inputs.target }}
     - ${{ inputs.all-env && '--all-env=' }}${{ inputs.all-env }}
     - ${{ inputs.attest-config && '--attest.config=' }}${{ inputs.attest-config }}
     - ${{ inputs.attest-default && '--attest.default=' }}${{ inputs.attest-default }}
