@@ -14,7 +14,7 @@ inputs:
   attest-config:
     description: Attestation config path
   attest-default:
-    description: Attestation default config, options=[sigstore sigstore-github x509 x509-env]
+    description: Attestation default config, options=[sigstore sigstore-github x509 x509-env kms pubkey]
   build-type:
     description: Set build type
   builder-id:
@@ -55,6 +55,8 @@ inputs:
     description: Set metadata invocation ID
   key:
     description: x509 Private key path
+  kms:
+    description: Provide KMS key reference
   oci:
     description: Enable OCI store
   oci-repo:
@@ -65,6 +67,8 @@ inputs:
     description: Select target platform, examples=windows/armv6, arm64 ..)
   predicate:
     description: Import predicate path
+  pubkey:
+    description: Public key path
   started-on:
     description: Set metadata started time (YYYY-MM-DDThh:mm:ssZ)
   statement:
@@ -118,7 +122,7 @@ inputs:
     description: Log verbosity level [-v,--verbose=1] = info, [-vv,--verbose=2] = debug
 runs:
   using: docker
-  image: docker://scribesecuriy.jfrog.io/scribe-docker-public-local/valint:v1.5.3
+  image: docker://scribesecuriy.jfrog.io/scribe-docker-public-local/valint:v1.5.5
   args:
     - slsa
     - ${{ inputs.target }}
@@ -145,11 +149,13 @@ runs:
     - ${{ inputs.git-tag && '--git-tag=' }}${{ inputs.git-tag }}
     - ${{ inputs.invocation && '--invocation=' }}${{ inputs.invocation }}
     - ${{ inputs.key && '--key=' }}${{ inputs.key }}
+    - ${{ inputs.kms && '--kms=' }}${{ inputs.kms }}
     - ${{ inputs.oci && '--oci=' }}${{ inputs.oci }}
     - ${{ inputs.oci-repo && '--oci-repo=' }}${{ inputs.oci-repo }}
     - ${{ inputs.payload && '--payload=' }}${{ inputs.payload }}
     - ${{ inputs.platform && '--platform=' }}${{ inputs.platform }}
     - ${{ inputs.predicate && '--predicate=' }}${{ inputs.predicate }}
+    - ${{ inputs.pubkey && '--pubkey=' }}${{ inputs.pubkey }}
     - ${{ inputs.started-on && '--started-on=' }}${{ inputs.started-on }}
     - ${{ inputs.statement && '--statement=' }}${{ inputs.statement }}
     - ${{ inputs.cache-enable && '--cache-enable=' }}${{ inputs.cache-enable }}
