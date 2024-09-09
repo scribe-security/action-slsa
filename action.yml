@@ -61,6 +61,8 @@ inputs:
     description: Enable OCI store
   oci-repo:
     description: Select OCI custom attestation repo
+  pass:
+    description: Private key password
   payload:
     description: path of the decoded payload
   platform:
@@ -152,6 +154,7 @@ runs:
     - ${{ inputs.kms && '--kms=' }}${{ inputs.kms }}
     - ${{ inputs.oci && '--oci=' }}${{ inputs.oci }}
     - ${{ inputs.oci-repo && '--oci-repo=' }}${{ inputs.oci-repo }}
+    - ${{ inputs.pass && '--pass=' }}${{ inputs.pass }}
     - ${{ inputs.payload && '--payload=' }}${{ inputs.payload }}
     - ${{ inputs.platform && '--platform=' }}${{ inputs.platform }}
     - ${{ inputs.predicate && '--predicate=' }}${{ inputs.predicate }}
