@@ -26,7 +26,7 @@ inputs:
   cert:
     description: x509 Cert path
   components:
-    description: Select by products components groups, options=[metadata layers packages syft files dep commits]
+    description: Select by products components groups, options=[metadata layers packages syft files dep commits base_image]
   crl:
     description: x509 CRL path
   crl-full-chain:
@@ -85,6 +85,8 @@ inputs:
     description: Environment keys to include in evidence
   gate:
     description: Policy Gate name
+  input:
+    description: Input Evidence target, format (<parser>:<file> or <scheme>:<name>:<tag>)
   label:
     description: Add Custom labels
   level:
@@ -167,6 +169,7 @@ runs:
     - ${{ inputs.deliverable && '--deliverable=' }}${{ inputs.deliverable }}
     - ${{ inputs.env && '--env=' }}${{ inputs.env }}
     - ${{ inputs.gate && '--gate=' }}${{ inputs.gate }}
+    - ${{ inputs.input && '--input=' }}${{ inputs.input }}
     - ${{ inputs.label && '--label=' }}${{ inputs.label }}
     - ${{ inputs.level && '--level=' }}${{ inputs.level }}
     - ${{ inputs.log-context && '--log-context=' }}${{ inputs.log-context }}
