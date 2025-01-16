@@ -71,6 +71,8 @@ inputs:
     description: Import predicate path
   pubkey:
     description: Public key path
+  skip-confirmation:
+    description: Skip Sigstore Confirmation
   started-on:
     description: Set metadata started time (YYYY-MM-DDThh:mm:ssZ)
   statement:
@@ -83,8 +85,10 @@ inputs:
     description: Mark as deliverable, options=[true, false]
   env:
     description: Environment keys to include in evidence
-  gate:
+  gate-name:
     description: Policy Gate name
+  gate-type:
+    description: Policy Gate type
   input:
     description: Input Evidence target, format (<parser>:<file> or <scheme>:<name>:<tag>)
   label:
@@ -126,7 +130,7 @@ inputs:
     description: Log verbosity level [-v,--verbose=1] = info, [-vv,--verbose=2] = debug
 runs:
   using: docker
-  image: docker://scribesecuriy.jfrog.io/scribe-docker-public-local/valint:dev-latest
+  image: docker://scribesecurity/valint:sh-5802_initiatives_config
   args:
     - slsa
     - ${{ inputs.target }}
@@ -161,6 +165,7 @@ runs:
     - ${{ inputs.platform && '--platform=' }}${{ inputs.platform }}
     - ${{ inputs.predicate && '--predicate=' }}${{ inputs.predicate }}
     - ${{ inputs.pubkey && '--pubkey=' }}${{ inputs.pubkey }}
+    - ${{ inputs.skip-confirmation && '--skip-confirmation=' }}${{ inputs.skip-confirmation }}
     - ${{ inputs.started-on && '--started-on=' }}${{ inputs.started-on }}
     - ${{ inputs.statement && '--statement=' }}${{ inputs.statement }}
     - ${{ inputs.cache-enable && '--cache-enable=' }}${{ inputs.cache-enable }}
@@ -168,7 +173,8 @@ runs:
     - --context-type=github
     - ${{ inputs.deliverable && '--deliverable=' }}${{ inputs.deliverable }}
     - ${{ inputs.env && '--env=' }}${{ inputs.env }}
-    - ${{ inputs.gate && '--gate=' }}${{ inputs.gate }}
+    - ${{ inputs.gate-name && '--gate-name=' }}${{ inputs.gate-name }}
+    - ${{ inputs.gate-type && '--gate-type=' }}${{ inputs.gate-type }}
     - ${{ inputs.input && '--input=' }}${{ inputs.input }}
     - ${{ inputs.label && '--label=' }}${{ inputs.label }}
     - ${{ inputs.level && '--level=' }}${{ inputs.level }}
