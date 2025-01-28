@@ -71,6 +71,8 @@ inputs:
     description: Import predicate path
   pubkey:
     description: Public key path
+  skip-confirmation:
+    description: Skip Sigstore Confirmation
   started-on:
     description: Set metadata started time (YYYY-MM-DDThh:mm:ssZ)
   statement:
@@ -161,6 +163,7 @@ runs:
     - ${{ inputs.platform && '--platform=' }}${{ inputs.platform }}
     - ${{ inputs.predicate && '--predicate=' }}${{ inputs.predicate }}
     - ${{ inputs.pubkey && '--pubkey=' }}${{ inputs.pubkey }}
+    - ${{ inputs.skip-confirmation && '--skip-confirmation=' }}${{ inputs.skip-confirmation }}
     - ${{ inputs.started-on && '--started-on=' }}${{ inputs.started-on }}
     - ${{ inputs.statement && '--statement=' }}${{ inputs.statement }}
     - ${{ inputs.cache-enable && '--cache-enable=' }}${{ inputs.cache-enable }}
