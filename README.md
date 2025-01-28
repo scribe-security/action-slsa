@@ -32,30 +32,14 @@ To overcome the limitation install tool directly - [installer](https://github.co
     required: true
   all-env:
     description: Attach all environment variables
-  attest-config:
-    description: Attestation config path
-  attest-default:
-    description: Attestation default config, options=[sigstore sigstore-github x509 x509-env kms pubkey]
   build-type:
     description: Set build type
   builder-id:
     description: Set builder id
   by-product:
     description: Attach by product path
-  ca:
-    description: x509 CA Chain path
-  cert:
-    description: x509 Cert path
   components:
-    description: Select by products components groups, options=[metadata layers packages syft files dep commits base_image]
-  crl:
-    description: x509 CRL path
-  crl-full-chain:
-    description: Enable Full chain CRL verfication
-  depth:
-    description: Git clone depth
-  disable-crl:
-    description: Disable certificate revocation verificatoin
+    description: Select by products components groups, options=[metadata layers packages syft files dep commits]
   external:
     description: Add build external parameters
   finished-on:
@@ -64,50 +48,56 @@ To overcome the limitation install tool directly - [installer](https://github.co
     description: Force overwrite cache
   format:
     description: Evidence format, options=[statement attest]
-  git-auth:
-    description: 'Git repository authentication info, [format: ''username:password'']'
+  invocation:
+    description: Set metadata invocation ID
+  predicate:
+    description: Import predicate path
+  started-on:
+    description: Set metadata started time (YYYY-MM-DDThh:mm:ssZ)
+  statement:
+    description: Import statement path
+  allow-expired:
+    description: Allow expired certs
+  attest-config:
+    description: Attestation config path
+  attest-default:
+    description: Attestation default config, options=[sigstore sigstore-github x509 x509-env]
+  backoff:
+    description: Backoff duration
+  ca:
+    description: x509 CA Chain path
+  cache-enable:
+    description: Enable local cache
+  cert:
+    description: x509 Cert path
+  config:
+    description: Configuration file path
+  context-dir:
+    description: Context dir
+  crl:
+    description: x509 CRL path
+  crl-full-chain:
+    description: Enable Full chain CRL verfication
+  deliverable:
+    description: Mark as deliverable, options=[true, false]
+  depth:
+    description: Git clone depth
+  disable-crl:
+    description: Disable certificate revocation verificatoin
+  env:
+    description: Environment keys to include in evidence
+  filter-regex:
+    description: Filter out files by regex
+  filter-scope:
+    description: Filter packages by scope
   git-branch:
     description: Git branch in the repository
   git-commit:
     description: Git commit hash in the repository
   git-tag:
     description: Git tag in the repository
-  invocation:
-    description: Set metadata invocation ID
   key:
     description: x509 Private key path
-  kms:
-    description: Provide KMS key reference
-  oci:
-    description: Enable OCI store
-  oci-repo:
-    description: Select OCI custom attestation repo
-  pass:
-    description: Private key password
-  payload:
-    description: path of the decoded payload
-  platform:
-    description: Select target platform, examples=windows/armv6, arm64 ..)
-  predicate:
-    description: Import predicate path
-  pubkey:
-    description: Public key path
-  started-on:
-    description: Set metadata started time (YYYY-MM-DDThh:mm:ssZ)
-  statement:
-    description: Import statement path
-  cache-enable:
-    description: Enable local cache
-  config:
-    description: Configuration file path
-  deliverable:
-    description: Mark as deliverable, options=[true, false]
-  env:
-    description: Environment keys to include in evidence
-  gate:
-    description: Policy Gate name
-  input:
-    description: Input Evidence target, format (\<parser>:\<file> or \<scheme>:\<name>:\<tag>)
   label:
     description: Add Custom labels
   level:
@@ -116,6 +106,10 @@ To overcome the limitation install tool directly - [installer](https://github.co
     description: Attach context to all logs
   log-file:
     description: Output log to file
+  oci:
+    description: Enable OCI store
+  oci-repo:
+    description: Select OCI custom attestation repo
   output-directory:
     description: Output directory path
     default: ./scribe/valint
@@ -123,20 +117,26 @@ To overcome the limitation install tool directly - [installer](https://github.co
     description: Output file name
   pipeline-name:
     description: Pipeline name
+  platform:
+    description: Select target platform, examples=windows/armv6, arm64 ..)
   predicate-type:
     description: Custom Predicate type (generic evidence format)
   product-key:
     description: Product Key
   product-version:
     description: Product Version
+  rule-args:
+    description: Policy arguments
+  scribe-auth-audience:
+    description: Scribe auth audience
   scribe-client-id:
-    description: Scribe Client ID (deprecated)
+    description: Scribe Client ID
   scribe-client-secret:
-    description: Scribe Client Token
-  scribe-disable:
-    description: Disable scribe client
+    description: Scribe Client Secret
   scribe-enable:
-    description: Enable scribe client (deprecated)
+    description: Enable scribe client
+  scribe-login-url:
+    description: Scribe login url
   scribe-url:
     description: Scribe API Url
   structured:
@@ -145,7 +145,7 @@ To overcome the limitation install tool directly - [installer](https://github.co
     description: Timeout duration
   verbose:
     description: Log verbosity level [-v,--verbose=1] = info, [-vv,--verbose=2] = debug
-``
+```
 
 ### Output arguments
 ```yaml
@@ -157,7 +157,7 @@ To overcome the limitation install tool directly - [installer](https://github.co
 Containerized action can be used on Linux runners as following
 ```yaml
 - name: Generate SLSA provenance
-  uses: scribe-security/action-slsa@v1.5.15
+  uses: scribe-security/action-slsa@v1.1.0
   with:
     target: 'busybox:latest'
 ```
@@ -165,55 +165,12 @@ Containerized action can be used on Linux runners as following
 Composite Action can be used on Linux or Windows runners as following
 ```yaml
 - name: Generate cyclonedx json SBOM
-  uses: scribe-security/action-slsa-cli@v1.5.15
+  uses: scribe-security/action-slsa-cli@v1.1.0
   with:
     target: 'hello-world:latest'
 ```
 
 > Use `master` instead of tag to automatically pull latest version.
-
-
-### 1. Obtain a Scribe Hub API Token
-1. Sign in to [Scribe Hub](https://app.scribesecurity.com). If you don't have an account you can sign up for free [here](https://scribesecurity.com/scribe-platform-lp/ "Start Using Scribe For Free").
-
-2. Create a API token in [Scribe Hub > Settings > Tokens](https://app.scribesecurity.com/settings/tokens). Copy it to a safe temporary notepad until you complete the integration.
-
-:::note Important
-The token is a secret and will not be accessible from the UI after you finalize the token generation. 
-:::
-
-### 2. Add the API token to GitLab secrets
-
-Set your Scribe Hub API token in Github with a key named SCRIBE_TOKEN as instructed in *GitHub instructions](https://docs.github.com/en/actions/security-guides/encrypted-secrets/ "GitHub Instructions")
-
-### 3. Instrument your build scripts
-
-#### Usage
-
-```yaml
-name:  scribe_github_workflow
-
-on: 
-  push:
-    tags:
-      - "*"
-
-jobs:
-  scribe-sign-verify:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: scribe-security/action-slsa@master
-        with:
-          target: [target]
-          format: [attest, statement]
-          scribe-client-secret: ${{ secrets.SCRIBE_TOKEN }}
-
-      - uses: scribe-security/action-verify@master
-        with:
-          target: [target]
-          input-format: [attest-slsa, statement-slsa]
-          scribe-client-secret: ${{ secrets.SCRIBE_TOKEN }}
-```
 
 ### Configuration
 If you prefer using a custom configuration file instead of specifying arguments directly, you have two choices. You can either place the configuration file in the default path, which is `.valint.yaml`, or you can specify a custom path using the `config` argument.
@@ -302,6 +259,151 @@ jobs:
 
 </details>
 
+### Target types - `[target]`
+---
+Target types are types of artifacts produced and consumed by your supply chain.
+Using supported targets, you can collect evidence and verify compliance on a range of artifacts.
+
+> Fields specified as [target] support the following format.
+
+### Format
+
+`[scheme]:[name]:[tag]` 
+
+> Backwards compatibility: It is still possible to use the `type: [scheme]`, `target: [name]:[tag]` format.
+
+| Sources | target-type | scheme | Description | example
+| --- | --- | --- | --- | --- |
+| Docker Daemon | image | docker | use the Docker daemon | docker:busybox:latest |
+| OCI registry | image | registry | use the docker registry directly | registry:busybox:latest |
+| Docker archive | image | docker-archive | use a tarball from disk for archives created from "docker save" | image | docker-archive:path/to/yourimage.tar |
+| OCI archive | image | oci-archive | tarball from disk for OCI archives | oci-archive:path/to/yourimage.tar |
+| Remote git | git| git | remote repository git | git:https://github.com/yourrepository.git |
+| Local git | git | git | local repository git | git:path/to/yourrepository | 
+| Directory | dir | dir | directory path on disk | dir:path/to/yourproject | 
+| File | file | file | file path on disk | file:path/to/yourproject/file | 
+
+### Evidence Stores
+Each storer can be used to store, find and download evidence, unifying all the supply chain evidence into a system is an important part to be able to query any subset for policy validation.
+
+| Type  | Description | requirement |
+| --- | --- | --- |
+| scribe | Evidence is stored on scribe service | scribe credentials |
+| OCI | Evidence is stored on a remote OCI registry | access to a OCI registry |
+
+### Scribe Evidence store
+Scribe evidence store allows you store evidence using scribe Service.
+
+Related Flags:
+> Note the flag set:
+>* `scribe-client-id`
+>* `scribe-client-secret`
+>* `scribe-enable`
+
+### Before you begin
+Integrating Scribe Hub with your environment requires the following credentials that are found in the **Integrations** page. (In your **[Scribe Hub](https://scribehub.scribesecurity.com/ "Scribe Hub Link")** go to **integrations**)
+
+* **Client ID**
+* **Client Secret**
+
+<img src='../../../../../img/ci/integrations-secrets.jpg' alt='Scribe Integration Secrets' width='70%' min-width='400px'/>
+
+* Add the credentials according to the [GitHub instructions](https://docs.github.com/en/actions/security-guides/encrypted-secrets/ "GitHub Instructions"). Based on the code example below, be sure to call the secrets **clientid** for the **client_id**, and **clientsecret** for the **client_secret**.
+
+* Use the Scribe custom actions as shown in the example bellow
+
+### Usage
+
+```yaml
+name:  scribe_github_workflow
+
+on: 
+  push:
+    tags:
+      - "*"
+
+jobs:
+  scribe-sign-verify:
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: scribe-security/action-slsa@master
+        with:
+          target: [target]
+          format: [statement, attest]
+          scribe-enable: true
+          scribe-client-id: ${{ secrets.clientid }}
+          scribe-client-secret: ${{ secrets.clientsecret }}
+
+      - uses: scribe-security/action-verify@master
+        with:
+          target: [target]
+          input-format: [statement-slsa, attest-slsa]
+          scribe-enable: true
+          scribe-client-id: ${{ secrets.clientid }}
+          scribe-client-secret: ${{ secrets.clientsecret }}
+```
+
+### Alternative evidence stores
+> You can learn more about alternative stores **[here](https://scribe-security.netlify.app/docs/integrating-scribe/other-evidence-stores)**.
+
+<details>
+  <summary> <b> OCI Evidence store </b></summary>
+Valint supports both storage and verification flows for `attestations` and `statement` objects utilizing OCI registry as an evidence store.
+
+Using OCI registry as an evidence store allows you to upload, download and verify evidence across your supply chain in a seamless manner.
+
+Related flags:
+* `oci` Enable OCI store.
+* `oci-repo` - Evidence store location.
+
+### Before you begin
+Evidence can be stored in any accusable registry.
+* Write access is required for upload (generate).
+* Read access is required for download (verify).
+
+You must first login with the required access privileges to your registry before calling Valint.
+For example, using `docker login` command or `docker/login-action` action.
+
+### Usage
+```yaml
+name:  scribe_github_workflow
+
+on: 
+  push:
+    tags:
+      - "*"
+
+jobs:
+  scribe-sign-verify:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ${{ env.my_registry }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name:  Generate evidence step
+        uses: scribe-security/action-slsa@master
+        with:
+          target: [target]
+          format: [statement attest predicate] (default [statement])
+          oci: true
+          oci-repo: [oci_repo]
+
+      - name:  Verify policy step
+        uses: scribe-security/action-verify@master
+        with:
+          target: [target]
+          input-format: [statement attest predicate] (default [statement])
+          oci: true
+          oci-repo: [oci_repo]
+```
+</details>
+
 ### Running action as non root user
 By default, the action runs in its own pid namespace as the root user. You can change the user by setting specific `USERID` and `USERNAME` environment variables.
 
@@ -336,39 +438,7 @@ By default, the action runs in its own pid namespace as the root user. If the us
 </details>
 ``` 
 
-### Platform-Specific Image Handling
-The Valint tool is compatible with both Linux and Windows images. Set the desired platform using the 'platform' field in your configuration:
-
-```yaml
-- name: Generate SLSA provenance
-  uses: scribe-security/action-slsa@master
-  with:
-    target: hello-world:latest
-    platform: linux/amd64
-```
-
-Docker is configured by default to pull images matching the runner's platform. For analyzing images across different platforms, you need to pull the image from the registry and specify the platform.
-
-```yaml
-- name: Generate SLSA provenance
-  uses: scribe-security/action-slsa@master
-  with:
-    target: registry:hello-world:latest
-    platform: windows/amd64
-```
-
-### Windows Runner Compatibility
-> On Windows Github runners, containerized actions are currently not supported. It's recommended to use CLI actions in such cases.
-
-```yaml
-- name: Generate SLSA provenance
-  uses: scribe-security/action-slsa-cli@master
-  with:
-    target: hello-world:latest
-```
-
 ### Basic examples
-
 <details>
   <summary>  Public registry image </summary>
 
@@ -421,67 +491,9 @@ steps:
   - name: Generate SLSA provenance
     uses: scribe-security/action-slsa@master
     with:
-      target: 'scribesecurity/example:latest'
+      target: 'scribesecurity.jfrog.io/scribe-docker-local/example:latest'
       force: true
 ```
-</details>
-
-
-<details>
-  <summary> SLSA Provenance with By-Product Asset Evidence </summary>
-
-Generate SLSA Provenance while adding by-product asset **evidence** using the `--input` flag. Example assets might include configuration files, additional images, or SARIF reports.
-
-```yaml
-- name: Generate SLSA Provenance with By-Products
-  uses: scribe-security/action-slsa@dev
-  with:
-    target: 'hello-world:latest'
-    verbose: 2
-    format: statement
-    input: |
-      sarif:test.json,
-      git:git:https://github.com/mongo-express/mongo-express.git
-```
-</details>
-
-<details>
-  <summary> SLSA Provenance with BOM </summary>
-
-Generate SLSA Provenance and a Bill of Materials (BOM) for a container image.
-
-> Note example uses **action-bom** action.
-
-```yaml
-- name: Generate SLSA Provenance with BOM
-  uses: scribe-security/action-bom@dev
-  with:
-    target: 'hello-world:latest'
-    verbose: 2
-    format: statement
-    provenance: true
-```
-
-</details>
-
-<details>
-  <summary> SLSA Provenance with SBOM and Base Image Analysis </summary>
-
-Generate SLSA Provenance with SBOM by product including Base Image analysis.
-
-> Note example uses **action-bom** action.
-
-```yaml
-- name: Generate SLSA Provenance with Base Image Analysis
-  uses: scribe-security/action-bom@dev
-  with:
-    target: 'hello-world:latest'
-    verbose: 2
-    format: statement
-    provenance: true
-    base-image: alpine:latest
-```
-
 </details>
 
 <details>
@@ -563,7 +575,7 @@ Create SLSA for local `docker save ...` output.
   with:
     context: .
     file: .GitHub/workflows/fixtures/Dockerfile_stub
-    tags: scribesecurity/example:latest
+    tags: scribesecurity.jfrog.io/scribe-docker-local/example:latest
     outputs: type=docker,dest=stub_local.tar
 
 - name: Generate SLSA provenance
@@ -585,7 +597,7 @@ Create SLSA for the local oci archive.
   with:
     context: .
     file: .GitHub/workflows/fixtures/Dockerfile_stub
-    tags: scribesecurity/example:latest
+    tags: scribesecurity.jfrog.io/scribe-docker-local/example:latest
     outputs: type=oci,dest=stub_oci_local.tar
 
 - name: Generate SLSA provenance
@@ -972,69 +984,6 @@ Install valint as a tool
     valint bom busybox:latest
 ``` 
 </details>
-
-
-### Alternative evidence stores
-
-> You can learn more about alternative stores **[here](https://scribe-security.netlify.app/docs/integrating-scribe/other-evidence-stores)**.
-
-<details>
-  <summary> <b> OCI Evidence store </b></summary>
-Valint supports both storage and verification flows for `attestations` and `statement` objects utilizing OCI registry as an evidence store.
-
-Using OCI registry as an evidence store allows you to upload, download and verify evidence across your supply chain in a seamless manner.
-
-Related flags:
-* `oci` Enable OCI store.
-* `oci-repo` - Evidence store location.
-
-### Before you begin
-Evidence can be stored in any accusable registry.
-* Write access is required for upload (generate).
-* Read access is required for download (verify).
-
-You must first login with the required access privileges to your registry before calling Valint.
-For example, using `docker login` command or `docker/login-action` action.
-
-### Usage
-```yaml
-name:  scribe_github_workflow
-
-on: 
-  push:
-    tags:
-      - "*"
-
-jobs:
-  scribe-sign-verify:
-    runs-on: ubuntu-latest
-    steps:
-
-      - name: Login to GitHub Container Registry
-        uses: docker/login-action@v2
-        with:
-          registry: ${{ env.my_registry }}
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name:  Generate evidence step
-        uses: scribe-security/action-slsa@master
-        with:
-          target: [target]
-          format: [statement attest predicate] (default [statement])
-          oci: true
-          oci-repo: [oci_repo]
-
-      - name:  Verify policy step
-        uses: scribe-security/action-verify@master
-        with:
-          target: [target]
-          input-format: [statement attest predicate] (default [statement])
-          oci: true
-          oci-repo: [oci_repo]
-```
-</details>
-
 
 ## .gitignore
 Recommended to add output directory value to your .gitignore file.
