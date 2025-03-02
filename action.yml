@@ -88,7 +88,7 @@ inputs:
   gate:
     description: Policy Gate name
   input:
-    description: Input Evidence target, format (<parser>:<file> or <scheme>:<name>:<tag>)
+    description: Input Evidence target, format (\<parser>:\<file> or \<scheme>:\<name>:\<tag>)
   label:
     description: Add Custom labels
   level:
@@ -128,7 +128,7 @@ inputs:
     description: Log verbosity level [-v,--verbose=1] = info, [-vv,--verbose=2] = debug
 runs:
   using: docker
-  image: docker://scribesecurity/valint:dev-latest
+  image: docker://scribesecuriy.jfrog.io/scribe-docker-public-local/valint:dev-latest
   args:
     - slsa
     - ${{ inputs.target }}
