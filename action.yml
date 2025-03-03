@@ -128,7 +128,7 @@ inputs:
     description: Log verbosity level [-v,--verbose=1] = info, [-vv,--verbose=2] = debug
 runs:
   using: docker
-  image: docker://scribesecurity/valint:v1.5.17
+  image: docker://scribesecurity/valint:v1.5.18
   args:
     - slsa
     - ${{ inputs.target }}
