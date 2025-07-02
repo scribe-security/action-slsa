@@ -15,6 +15,8 @@ inputs:
     description: Attestation config path
   attest-default:
     description: Attestation default config, options=[sigstore sigstore-github x509 x509-env kms pubkey]
+  bom:
+    description: Upload SBOM evidence and by product
   build-type:
     description: Set build type
   builder-id:
@@ -73,6 +75,14 @@ inputs:
     description: Public key path
   skip-confirmation:
     description: Skip Sigstore Confirmation
+  source:
+    description: Git repository source for target
+  source-asset-id:
+    description: Source asset id for Git source repo
+  source-asset-name:
+    description: Source asset name for Git source repo
+  source-asset-platform:
+    description: Source asset platform for Git source repo
   started-on:
     description: Set metadata started time (YYYY-MM-DDThh:mm:ssZ)
   statement:
@@ -137,6 +147,7 @@ runs:
     - ${{ inputs.all-env && '--all-env=' }}${{ inputs.all-env }}
     - ${{ inputs.attest-config && '--attest.config=' }}${{ inputs.attest-config }}
     - ${{ inputs.attest-default && '--attest.default=' }}${{ inputs.attest-default }}
+    - ${{ inputs.bom && '--bom=' }}${{ inputs.bom }}
     - ${{ inputs.build-type && '--build-type=' }}${{ inputs.build-type }}
     - ${{ inputs.builder-id && '--builder-id=' }}${{ inputs.builder-id }}
     - ${{ inputs.by-product && '--by-product=' }}${{ inputs.by-product }}
@@ -166,6 +177,10 @@ runs:
     - ${{ inputs.predicate && '--predicate=' }}${{ inputs.predicate }}
     - ${{ inputs.pubkey && '--pubkey=' }}${{ inputs.pubkey }}
     - ${{ inputs.skip-confirmation && '--skip-confirmation=' }}${{ inputs.skip-confirmation }}
+    - ${{ inputs.source && '--source=' }}${{ inputs.source }}
+    - ${{ inputs.source-asset-id && '--source-asset-id=' }}${{ inputs.source-asset-id }}
+    - ${{ inputs.source-asset-name && '--source-asset-name=' }}${{ inputs.source-asset-name }}
+    - ${{ inputs.source-asset-platform && '--source-asset-platform=' }}${{ inputs.source-asset-platform }}
     - ${{ inputs.started-on && '--started-on=' }}${{ inputs.started-on }}
     - ${{ inputs.statement && '--statement=' }}${{ inputs.statement }}
     - ${{ inputs.cache-enable && '--cache-enable=' }}${{ inputs.cache-enable }}
